@@ -10,6 +10,8 @@ function App() {
   const [date, setDate] = useState<any>(new Date());
   const [rates, setRates] = useState({});
   const [output, setOutput] = useState(0);
+  const [fromDropdownOpen, setFromDropdownOpen] = useState(false);
+  const [toDropdownOpen, setToDropdownOpen] = useState(false);
 
   useEffect(() => {
     getRates();
@@ -52,38 +54,60 @@ function App() {
         />
       </div>
 
-      <div className="mb-4">
+      <div className="mb-4 relative">
         <label className="block text-sm font-medium text-gray-700 mb-1">
           From:
         </label>
-        <select
-          value={fromCurrency}
-          onChange={(e) => setFromCurrency(e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        <div
+          className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+          onClick={() => setFromDropdownOpen(!fromDropdownOpen)}
         >
-          {Object.keys(rates).map((currency, index) => (
-            <option key={index} value={currency}>
-              {currency}
-            </option>
-          ))}
-        </select>
+          {fromCurrency}
+        </div>
+        {fromDropdownOpen && (
+          <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-52 overflow-y-auto">
+            {Object.keys(rates).map((currency, index) => (
+              <div
+                key={index}
+                onClick={() => {
+                  setFromCurrency(currency);
+                  setFromDropdownOpen(false);
+                }}
+                className="p-2 hover:bg-gray-200 cursor-pointer"
+              >
+                {currency}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
-      <div className="mb-4">
+      <div className="mb-4 relative">
         <label className="block text-sm font-medium text-gray-700 mb-1">
           To:
         </label>
-        <select
-          value={toCurrency}
-          onChange={(e) => setToCurrency(e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        <div
+          className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+          onClick={() => setToDropdownOpen(!toDropdownOpen)}
         >
-          {Object.keys(rates).map((currency, index) => (
-            <option key={index} value={currency}>
-              {currency}
-            </option>
-          ))}
-        </select>
+          {toCurrency}
+        </div>
+        {toDropdownOpen && (
+          <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-52 overflow-y-auto">
+            {Object.keys(rates).map((currency, index) => (
+              <div
+                key={index}
+                onClick={() => {
+                  setToCurrency(currency);
+                  setToDropdownOpen(false);
+                }}
+                className="p-2 hover:bg-gray-200 cursor-pointer"
+              >
+                {currency}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="mb-4">
