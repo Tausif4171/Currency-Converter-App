@@ -38,6 +38,16 @@ function App() {
     setOutput(output);
   };
 
+  const handleFromClick = () => {
+    setFromDropdownOpen(!fromDropdownOpen);
+    setToDropdownOpen(false);
+  };
+
+  const handleToClick = () => {
+    setToDropdownOpen(!toDropdownOpen);
+    setFromDropdownOpen(false);
+  };
+
   return (
     <div className="max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg">
       <h1 className="text-2xl font-semibold mb-6 text-center text-gray-800">
@@ -62,7 +72,7 @@ function App() {
         </label>
         <div
           className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
-          onClick={() => setFromDropdownOpen(!fromDropdownOpen)}
+          onClick={handleFromClick}
         >
           {fromCurrency}
         </div>
@@ -102,7 +112,7 @@ function App() {
         </label>
         <div
           className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
-          onClick={() => setToDropdownOpen(!toDropdownOpen)}
+          onClick={handleToClick}
         >
           {toCurrency}
         </div>
@@ -149,7 +159,7 @@ function App() {
       </div>
 
       <button
-        className="w-full outline-none bg-blue-500 text-white py-2 rounded-md shadow-md hover:bg-blue-600 "
+        className="w-full bg-blue-500 text-white py-2 rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300"
         onClick={calculateOutput}
       >
         Calculate
