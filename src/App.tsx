@@ -142,6 +142,7 @@ function App() {
         <DatePicker
           selected={date}
           onChange={(date) => setDate(date)}
+          showYearDropdown
           className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
