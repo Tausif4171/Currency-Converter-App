@@ -15,7 +15,7 @@ const CurrencyConverter: React.FC = () => {
   useEffect(() => {
     const getRates = async () => {
       const response = await fetch(
-        `https://v6.exchangerate-api.com/v6/97d29519909f473c87f4a60b/latest/${fromCurrency}`
+        `https://v6.exchangerate-api.com/v6/78317c6630ec3516eee334c3/latest/${fromCurrency}`
       ).then((response) => response.json());
       setRates(response.conversion_rates);
     };
@@ -25,7 +25,7 @@ const CurrencyConverter: React.FC = () => {
   const calculateOutput = async () => {
     if (!(date instanceof Date)) return;
     const response = await fetch(
-      `https://v6.exchangerate-api.com/v6/97d29519909f473c87f4a60b/history/${fromCurrency}/${date.getFullYear()}/${
+      `https://v6.exchangerate-api.com/v6/78317c6630ec3516eee334c3/history/${fromCurrency}/${date.getFullYear()}/${
         date.getMonth() + 1
       }/${date.getDate()}`
     ).then((response) => response.json());
