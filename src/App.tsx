@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
 import DatePicker from "react-date-picker";
 import "react-date-picker/dist/DatePicker.css";
@@ -15,6 +15,9 @@ function App() {
   const [toDropdownOpen, setToDropdownOpen] = useState(false);
   const [fromSearch, setFromSearch] = useState("");
   const [toSearch, setToSearch] = useState("");
+
+  const fromDropdownRef = useRef<any>(null);
+  const toDropdownRef = useRef<any>(null);
 
   useEffect(() => {
     const getRates = async () => {
@@ -48,6 +51,28 @@ function App() {
     setFromDropdownOpen(false);
   };
 
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      fromDropdownRef.current &&
+      !fromDropdownRef.current.contains(event.target)
+    ) {
+      setFromDropdownOpen(false);
+    }
+    if (
+      toDropdownRef.current &&
+      !toDropdownRef.current.contains(event.target)
+    ) {
+      setToDropdownOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <div className="max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg">
       <h1 className="text-2xl font-semibold mb-6 text-center text-gray-800">
@@ -66,7 +91,7 @@ function App() {
         />
       </div>
 
-      <div className="mb-4 relative">
+      <div className="mb-4 relative" ref={fromDropdownRef}>
         <label className="block text-sm font-medium text-gray-700 mb-1">
           From:
         </label>
@@ -106,7 +131,7 @@ function App() {
         )}
       </div>
 
-      <div className="mb-4 relative">
+      <div className="mb-4 relative" ref={toDropdownRef}>
         <label className="block text-sm font-medium text-gray-700 mb-1">
           To:
         </label>
