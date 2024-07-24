@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+import DatePicker from "react-date-picker";
+import "react-date-picker/dist/DatePicker.css";
+import "react-calendar/dist/Calendar.css";
 
 function App() {
   const [amount, setAmount] = useState<any>(1);
@@ -140,15 +141,15 @@ function App() {
           Date:
         </label>
         <DatePicker
-          selected={date}
-          onChange={(date) => setDate(date)}
-          showYearDropdown
+          value={date}
+          onChange={setDate}
+          format="y-MM-dd"
           className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
 
       <button
-        className="w-full bg-blue-500 text-white py-2 rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300"
+        className="w-full outline-none bg-blue-500 text-white py-2 rounded-md shadow-md hover:bg-blue-600 "
         onClick={calculateOutput}
       >
         Calculate

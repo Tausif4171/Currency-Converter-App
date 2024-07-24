@@ -1,0 +1,30 @@
+/* Override default react-date-picker styles */
+.react-date-picker__wrapper {
+  border: none !important;
+  width: 100%;
+}
+
+.react-date-picker__inputGroup {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+}
+
+.react-date-picker__inputGroup input {
+  border: none !important;
+  outline: none !important;
+  font-size: 1rem;
+}
+
+.react-date-picker__inputGroup input:focus {
+  border: none !important;
+  outline: none !important;
+}
+
+.react-date-picker__inputGroup__divider {
+  margin: 0 0.25rem;
+}
+
+.react-date-picker__inputGroup__leadingZero {
+  font-size: 1rem;
+}
