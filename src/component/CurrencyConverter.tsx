@@ -1,22 +1,16 @@
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import DatePicker from "react-date-picker";
+import Dropdown from "./Dropdown";
 import "react-date-picker/dist/DatePicker.css";
 import "react-calendar/dist/Calendar.css";
 
-function CurrencyConverter() {
-  const [amount, setAmount] = useState<any>(1);
-  const [fromCurrency, setFromCurrency] = useState("USD");
-  const [toCurrency, setToCurrency] = useState("EUR");
+const CurrencyConverter: React.FC = () => {
+  const [amount, setAmount] = useState<number>(1);
+  const [fromCurrency, setFromCurrency] = useState<string>("USD");
+  const [toCurrency, setToCurrency] = useState<string>("EUR");
   const [date, setDate] = useState<any>(new Date());
-  const [rates, setRates] = useState({});
-  const [output, setOutput] = useState(0);
-  const [fromDropdownOpen, setFromDropdownOpen] = useState(false);
-  const [toDropdownOpen, setToDropdownOpen] = useState(false);
-  const [fromSearch, setFromSearch] = useState("");
-  const [toSearch, setToSearch] = useState("");
-
-  const fromDropdownRef = useRef<any>(null);
-  const toDropdownRef = useRef<any>(null);
+  const [rates, setRates] = useState<{ [key: string]: number }>({});
+  const [output, setOutput] = useState<number>(0);
 
   useEffect(() => {
     const getRates = async () => {
@@ -29,6 +23,7 @@ function CurrencyConverter() {
   }, [fromCurrency]);
 
   const calculateOutput = async () => {
+    if (!(date instanceof Date)) return;
     const response = await fetch(
       `https://v6.exchangerate-api.com/v6/97d29519909f473c87f4a60b/history/${fromCurrency}/${date.getFullYear()}/${
         date.getMonth() + 1
@@ -39,38 +34,6 @@ function CurrencyConverter() {
     const output = amount * CurrencyRate;
     setOutput(output);
   };
-
-  const handleFromClick = () => {
-    setFromDropdownOpen(!fromDropdownOpen);
-    setToDropdownOpen(false);
-  };
-
-  const handleToClick = () => {
-    setToDropdownOpen(!toDropdownOpen);
-    setFromDropdownOpen(false);
-  };
-
-  const handleClickOutside = (event: MouseEvent) => {
-    if (
-      fromDropdownRef.current &&
-      !fromDropdownRef.current.contains(event.target)
-    ) {
-      setFromDropdownOpen(false);
-    }
-    if (
-      toDropdownRef.current &&
-      !toDropdownRef.current.contains(event.target)
-    ) {
-      setToDropdownOpen(false);
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
 
   return (
     <div className="max-w-lg mt-16 mx-auto p-6 bg-white shadow-lg border border-[#ddd] rounded-xl">
@@ -85,90 +48,24 @@ function CurrencyConverter() {
         <input
           type="number"
           value={amount}
-          onChange={(e) => setAmount(e.target.value)}
+          onChange={(e) => setAmount(Number(e.target.value))}
           className="w-full outline-none p-2 border border-gray-300 rounded-md shadow-sm"
         />
       </div>
 
-      <div className="mb-4 relative" ref={fromDropdownRef}>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          From:
-        </label>
-        <div
-          className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
-          onClick={handleFromClick}
-        >
-          {fromCurrency}
-        </div>
-        {fromDropdownOpen && (
-          <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-52 overflow-y-auto">
-            <input
-              type="text"
-              value={fromSearch}
-              onChange={(e) => setFromSearch(e.target.value)}
-              className="w-full outline-none p-2 border-b border-gray-300"
-              placeholder="Search currency"
-            />
-            {Object.keys(rates)
-              .filter((currency) =>
-                currency.toLowerCase().includes(fromSearch.toLowerCase())
-              )
-              .map((currency, index) => (
-                <div
-                  key={index}
-                  onClick={() => {
-                    setFromCurrency(currency);
-                    setFromDropdownOpen(false);
-                    setFromSearch(""); // Reset search input
-                  }}
-                  className="p-2 hover:bg-gray-200 cursor-pointer"
-                >
-                  {currency}
-                </div>
-              ))}
-          </div>
-        )}
-      </div>
+      <Dropdown
+        label="From"
+        selected={fromCurrency}
+        options={Object.keys(rates)}
+        onOptionSelect={setFromCurrency}
+      />
 
-      <div className="mb-4 relative" ref={toDropdownRef}>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          To:
-        </label>
-        <div
-          className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
-          onClick={handleToClick}
-        >
-          {toCurrency}
-        </div>
-        {toDropdownOpen && (
-          <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-52 overflow-y-auto">
-            <input
-              type="text"
-              value={toSearch}
-              onChange={(e) => setToSearch(e.target.value)}
-              className="w-full outline-none p-2 border-b border-gray-300"
-              placeholder="Search currency"
-            />
-            {Object.keys(rates)
-              .filter((currency) =>
-                currency.toLowerCase().includes(toSearch.toLowerCase())
-              )
-              .map((currency, index) => (
-                <div
-                  key={index}
-                  onClick={() => {
-                    setToCurrency(currency);
-                    setToDropdownOpen(false);
-                    setToSearch(""); // Reset search input
-                  }}
-                  className="p-2 hover:bg-gray-200 cursor-pointer"
-                >
-                  {currency}
-                </div>
-              ))}
-          </div>
-        )}
-      </div>
+      <Dropdown
+        label="To"
+        selected={toCurrency}
+        options={Object.keys(rates)}
+        onOptionSelect={setToCurrency}
+      />
 
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -196,6 +93,6 @@ function CurrencyConverter() {
       )}
     </div>
   );
-}
+};
 
 export default CurrencyConverter;
