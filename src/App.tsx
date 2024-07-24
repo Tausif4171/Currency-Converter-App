@@ -35,24 +35,31 @@ function App() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-8 bg-white shadow-lg rounded-lg">
-      <h1 className="text-3xl font-bold mb-6 text-center">
+    <div className="max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg">
+      <h1 className="text-2xl font-semibold mb-6 text-center text-gray-800">
         Currency Converter
       </h1>
 
       <div className="mb-4">
-        <label className="block text-lg font-medium mb-2">Amount:</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Amount:
+        </label>
         <input
           type="number"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
+          className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
-      <div className="input-from">
-        <label>From:</label>
+
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          From:
+        </label>
         <select
           value={fromCurrency}
           onChange={(e) => setFromCurrency(e.target.value)}
+          className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           {Object.keys(rates).map((currency, index) => (
             <option key={index} value={currency}>
@@ -61,11 +68,15 @@ function App() {
           ))}
         </select>
       </div>
-      <div className="input-to">
-        <label>To:</label>
+
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          To:
+        </label>
         <select
           value={toCurrency}
           onChange={(e) => setToCurrency(e.target.value)}
+          className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           {Object.keys(rates).map((currency, index) => (
             <option key={index} value={currency}>
@@ -74,16 +85,30 @@ function App() {
           ))}
         </select>
       </div>
-      <div className="input-date">
-        <label>Date:</label>
-        <DatePicker selected={date} onChange={(date) => setDate(date)} />
+
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Date:
+        </label>
+        <DatePicker
+          selected={date}
+          onChange={(date) => setDate(date)}
+          className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
       </div>
-      <button className="btn" onClick={calculateOutput}>
+
+      <button
+        className="w-full bg-blue-500 text-white py-2 rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300"
+        onClick={calculateOutput}
+      >
         Calculate
       </button>
-      <div className="output">
-        <label>Output: {output}</label>
-      </div>
+
+      {output > 0 && (
+        <div className="mt-4 text-lg font-semibold text-gray-800">
+          <label>Output: {output.toFixed(2)}</label>
+        </div>
+      )}
     </div>
   );
 }
