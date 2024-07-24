@@ -12,21 +12,22 @@ function App() {
   const [output, setOutput] = useState(0);
   const [fromDropdownOpen, setFromDropdownOpen] = useState(false);
   const [toDropdownOpen, setToDropdownOpen] = useState(false);
+  const [fromSearch, setFromSearch] = useState("");
+  const [toSearch, setToSearch] = useState("");
 
   useEffect(() => {
+    const getRates = async () => {
+      const response = await fetch(
+        `https://v6.exchangerate-api.com/v6/97d29519909f473c87f4a60b/latest/${fromCurrency}`
+      ).then((response) => response.json());
+      setRates(response.conversion_rates);
+    };
     getRates();
-  }, []);
-
-  const getRates = async () => {
-    const response = await fetch(
-      `https://v6.exchangerate-api.com/v6/5be7d45e147adb2a8626f8c4/latest/${fromCurrency}`
-    ).then((response) => response.json());
-    setRates(response.conversion_rates);
-  };
+  }, [fromCurrency]);
 
   const calculateOutput = async () => {
     const response = await fetch(
-      `https://v6.exchangerate-api.com/v6/5be7d45e147adb2a8626f8c4/history/${fromCurrency}/${date.getFullYear()}/${
+      `https://v6.exchangerate-api.com/v6/97d29519909f473c87f4a60b/history/${fromCurrency}/${date.getFullYear()}/${
         date.getMonth() + 1
       }/${date.getDate()}`
     ).then((response) => response.json());
@@ -50,7 +51,7 @@ function App() {
           type="number"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full outline-none p-2 border border-gray-300 rounded-md shadow-sm"
         />
       </div>
 
@@ -66,18 +67,30 @@ function App() {
         </div>
         {fromDropdownOpen && (
           <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-52 overflow-y-auto">
-            {Object.keys(rates).map((currency, index) => (
-              <div
-                key={index}
-                onClick={() => {
-                  setFromCurrency(currency);
-                  setFromDropdownOpen(false);
-                }}
-                className="p-2 hover:bg-gray-200 cursor-pointer"
-              >
-                {currency}
-              </div>
-            ))}
+            <input
+              type="text"
+              value={fromSearch}
+              onChange={(e) => setFromSearch(e.target.value)}
+              className="w-full outline-none p-2 border-b border-gray-300"
+              placeholder="Search currency"
+            />
+            {Object.keys(rates)
+              .filter((currency) =>
+                currency.toLowerCase().includes(fromSearch.toLowerCase())
+              )
+              .map((currency, index) => (
+                <div
+                  key={index}
+                  onClick={() => {
+                    setFromCurrency(currency);
+                    setFromDropdownOpen(false);
+                    setFromSearch(""); // Reset search input
+                  }}
+                  className="p-2 hover:bg-gray-200 cursor-pointer"
+                >
+                  {currency}
+                </div>
+              ))}
           </div>
         )}
       </div>
@@ -94,18 +107,30 @@ function App() {
         </div>
         {toDropdownOpen && (
           <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-52 overflow-y-auto">
-            {Object.keys(rates).map((currency, index) => (
-              <div
-                key={index}
-                onClick={() => {
-                  setToCurrency(currency);
-                  setToDropdownOpen(false);
-                }}
-                className="p-2 hover:bg-gray-200 cursor-pointer"
-              >
-                {currency}
-              </div>
-            ))}
+            <input
+              type="text"
+              value={toSearch}
+              onChange={(e) => setToSearch(e.target.value)}
+              className="w-full outline-none p-2 border-b border-gray-300"
+              placeholder="Search currency"
+            />
+            {Object.keys(rates)
+              .filter((currency) =>
+                currency.toLowerCase().includes(toSearch.toLowerCase())
+              )
+              .map((currency, index) => (
+                <div
+                  key={index}
+                  onClick={() => {
+                    setToCurrency(currency);
+                    setToDropdownOpen(false);
+                    setToSearch(""); // Reset search input
+                  }}
+                  className="p-2 hover:bg-gray-200 cursor-pointer"
+                >
+                  {currency}
+                </div>
+              ))}
           </div>
         )}
       </div>
